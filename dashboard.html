@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — Rasel</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.08);
+    --border-md: rgba(0,0,0,0.13);
+    --text: #1a1d23;
+    --text-2: #5a6070;
+    --text-3: #9aa0ad;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --font: 'Plus Jakarta Sans', sans-serif;
+    --topbar-h: 58px;
+
+    --c-home:    #3b82f6;
+    --c-social:  #ec4899;
+    --c-envato:  #10b981;
+    --c-shopify: #8b5cf6;
+    --c-research:#f59e0b;
+    --c-channel: #ef4444;
+    --c-invest:  #06b6d4;
+    --c-leads:   #84cc16;
+    --c-memory:  #a855f7;
+    --c-team:    #f97316;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--topbar-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 4px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+
+  .logo {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-right: 12px;
+    white-space: nowrap;
+    letter-spacing: -0.3px;
+  }
+  .logo span { color: #3b82f6; }
+
+  .nav-items {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-items::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-2);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.18s, color 0.18s, transform 0.12s;
+    position: relative;
+  }
+  .nav-btn i { font-size: 16px; transition: transform 0.18s; }
+  .nav-btn:hover { transform: translateY(-1px); }
+  .nav-btn:active { transform: scale(0.97); }
+
+  .nav-btn[data-sec="home"]:hover, .nav-btn[data-sec="home"].active    { background: #eff6ff; color: var(--c-home); }
+  .nav-btn[data-sec="social"]:hover, .nav-btn[data-sec="social"].active  { background: #fdf2f8; color: var(--c-social); }
+  .nav-btn[data-sec="envato"]:hover, .nav-btn[data-sec="envato"].active  { background: #ecfdf5; color: var(--c-envato); }
+  .nav-btn[data-sec="shopify"]:hover,.nav-btn[data-sec="shopify"].active { background: #f5f3ff; color: var(--c-shopify); }
+  .nav-btn[data-sec="research"]:hover,.nav-btn[data-sec="research"].active{ background: #fffbeb; color: var(--c-research); }
+  .nav-btn[data-sec="channel"]:hover, .nav-btn[data-sec="channel"].active { background: #fef2f2; color: var(--c-channel); }
+  .nav-btn[data-sec="invest"]:hover,  .nav-btn[data-sec="invest"].active  { background: #ecfeff; color: var(--c-invest); }
+  .nav-btn[data-sec="leads"]:hover,   .nav-btn[data-sec="leads"].active   { background: #f7fee7; color: var(--c-leads); }
+  .nav-btn[data-sec="memory"]:hover,  .nav-btn[data-sec="memory"].active  { background: #faf5ff; color: var(--c-memory); }
+  .nav-btn[data-sec="team"]:hover,    .nav-btn[data-sec="team"].active    { background: #fff7ed; color: var(--c-team); }
+
+  .nav-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 14px;
+    right: 14px;
+    height: 2px;
+    border-radius: 2px 2px 0 0;
+    background: currentColor;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+    flex-shrink: 0;
+  }
+  .time-badge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: var(--bg);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+  }
+  .user-badge {
+    font-size: 12px;
+    font-weight: 600;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #ef4444;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .logout-btn:hover { background: #fee2e2; }
+
+  /* ── CONTENT ── */
+  .content-wrap {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 24px 48px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; animation: fadeUp 0.22s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .page-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .page-header h2 span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* ── GRID ── */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+  .grid-2-3 { display: grid; grid-template-columns: 1fr 1.5fr; gap: 14px; }
+  .mb16 { margin-bottom: 16px; }
+  .mb20 { margin-bottom: 20px; }
+
+  /* ── METRIC CARD ── */
+  .mcard {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mcard::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent, #3b82f6);
+  }
+  .mcard .mlabel { font-size: 11px; font-weight: 500; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .mcard .mval { font-size: 24px; font-weight: 600; color: var(--text); line-height: 1; }
+  .mcard .msub { font-size: 11px; color: var(--text-3); margin-top: 5px; }
+  .mcard .micon { position: absolute; top: 14px; right: 14px; font-size: 22px; opacity: .12; color: var(--accent, #3b82f6); }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+  }
+  .card-head {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-2);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-head i { font-size: 15px; }
+
+  /* ── INPUTS ── */
+  input[type=text], input[type=number], input[type=date], select, textarea {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 8px 11px;
+    border: 1px solid var(--border-md);
+    border-radius: 8px;
+    background: #fafafa;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    background: #fff;
+  }
+  textarea { resize: vertical; }
+
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row input, .row select { flex: 1; }
+  .flex-end { justify-content: flex-end; }
+
+  /* ── BUTTONS ── */
+  .btn { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-md); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px; }
+  .btn:hover { background: var(--bg); }
+  .btn:active { transform: scale(0.97); }
+  .btn-blue  { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+  .btn-blue:hover  { background: #2563eb; }
+  .btn-green { background: #10b981; border-color: #10b981; color: #fff; }
+  .btn-green:hover { background: #059669; }
+  .btn-pink  { background: #ec4899; border-color: #ec4899; color: #fff; }
+  .btn-pink:hover  { background: #db2777; }
+  .btn-purple{ background: #8b5cf6; border-color: #8b5cf6; color: #fff; }
+  .btn-purple:hover{ background: #7c3aed; }
+  .btn-amber { background: #f59e0b; border-color: #f59e0b; color: #fff; }
+  .btn-amber:hover { background: #d97706; }
+  .btn-red   { background: #ef4444; border-color: #ef4444; color: #fff; }
+  .btn-red:hover   { background: #dc2626; }
+  .btn-sm { padding: 5px 11px; font-size: 12px; }
+  .btn-icon { padding: 7px 9px; }
+
+  /* ── FORM PANEL ── */
+  .form-panel {
+    background: #f8faff;
+    border: 1px solid #dbeafe;
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .form-panel.open { display: block; animation: fadeUp 0.18s ease; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+  .form-grid.cols3 { grid-template-columns: repeat(3, 1fr); }
+  .flabel { font-size: 11px; font-weight: 600; color: var(--text-2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .05em; }
+  .fgroup { display: flex; flex-direction: column; }
+
+  /* ── TODO ── */
+  .todo-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .todo-item:last-child { border-bottom: none; }
+  .todo-cb { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border-md); cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .todo-cb.done { background: #10b981; border-color: #10b981; }
+  .todo-cb.done::after { content: '✓'; font-size: 11px; color: #fff; font-weight: 700; }
+  .todo-text { flex: 1; }
+  .todo-text.done { text-decoration: line-through; color: var(--text-3); }
+  .del-btn { cursor: pointer; color: var(--text-3); font-size: 14px; padding: 2px 4px; border-radius: 4px; transition: color 0.15s; }
+  .del-btn:hover { color: #ef4444; }
+
+  /* ── NOTE ── */
+  .note-item { padding: 10px 12px; background: var(--bg); border-radius: 8px; margin-bottom: 7px; font-size: 13px; position: relative; line-height: 1.5; }
+  .note-date { font-size: 10px; color: var(--text-3); margin-top: 4px; }
+  .note-del { position: absolute; top: 8px; right: 8px; cursor: pointer; color: var(--text-3); font-size: 13px; }
+  .note-del:hover { color: #ef4444; }
+
+  /* ── EXPENSE ── */
+  .exp-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .exp-row:last-child { border-bottom: none; }
+  .tag { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; flex-shrink: 0; }
+  .tag-inc { background: #d1fae5; color: #065f46; }
+  .tag-exp { background: #fee2e2; color: #991b1b; }
+  .tag-pend { background: #fef3c7; color: #92400e; }
+  .tag-done { background: #d1fae5; color: #065f46; }
+  .tag-ref  { background: #fee2e2; color: #991b1b; }
+  .mono { font-family: monospace; font-size: 13px; font-weight: 600; margin-left: auto; }
+
+  /* ── CALENDAR ── */
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .cal-month { font-size: 14px; font-weight: 600; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; font-size: 12px; }
+  .cal-hd { text-align: center; padding: 4px; font-weight: 600; color: var(--text-3); font-size: 11px; }
+  .cal-d { text-align: center; padding: 7px 3px; border-radius: 6px; cursor: pointer; color: var(--text-2); transition: background 0.12s; }
+  .cal-d:hover { background: #eff6ff; color: #3b82f6; }
+  .cal-d.today { background: #3b82f6; color: #fff; font-weight: 600; }
+  .cal-d.other { color: var(--text-3); opacity: .45; }
+
+  /* ── SOCIAL ── */
+  .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; margin-bottom: 10px; transition: box-shadow 0.15s; }
+  .post-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+  .post-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .plat-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .plat-fb { background: #dbeafe; color: #1d4ed8; }
+  .plat-ig { background: #fdf2f8; color: #db2777; }
+  .plat-tw { background: #e0f2fe; color: #0369a1; }
+  .plat-yt { background: #fee2e2; color: #dc2626; }
+  .plat-li { background: #e0f2fe; color: #1e40af; }
+  .post-date { font-size: 11px; color: var(--text-3); }
+  .post-actions { margin-left: auto; display: flex; gap: 6px; }
+  .status-toggle { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer; transition: all 0.15s; }
+  .st-pending  { background: #fef3c7; color: #92400e; }
+  .st-approved { background: #d1fae5; color: #065f46; }
+  .post-body { font-size: 13px; color: var(--text); line-height: 1.55; }
+
+  /* ── SITES ── */
+  .site-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .site-row:last-child { border-bottom: none; }
+  .rank-badge { font-size: 12px; font-weight: 700; width: 40px; text-align: center; padding: 4px 0; border-radius: 6px; flex-shrink: 0; }
+  .rank-up   { background: #d1fae5; color: #065f46; }
+  .rank-dn   { background: #fee2e2; color: #991b1b; }
+  .rank-same { background: #f3f4f6; color: #6b7280; }
+  .kw-wrap { flex: 1; background: #f3f4f6; border-radius: 4px; height: 6px; }
+  .kw-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); }
+  .arrow-up   { color: #10b981; font-weight: 700; }
+  .arrow-dn   { color: #ef4444; font-weight: 700; }
+
+  /* ── CHANNEL IDEAS ── */
+  .idea-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .idea-item:last-child { border-bottom: none; }
+  .idea-dot { width: 8px; height: 8px; border-radius: 50%; background: #8b5cf6; flex-shrink: 0; margin-top: 4px; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 0; border: 1px solid var(--border-md); border-radius: 8px; overflow: hidden; width: fit-content; margin-bottom: 16px; }
+  .tab { font-size: 12px; font-weight: 500; padding: 7px 16px; cursor: pointer; background: var(--surface); color: var(--text-2); border-right: 1px solid var(--border); transition: background 0.13s; }
+  .tab:last-child { border-right: none; }
+  .tab.active { background: var(--bg); color: var(--text); font-weight: 600; }
+  .tab:hover:not(.active) { background: #f9fafb; }
+
+  /* ── COMING SOON ── */
+  .coming { text-align: center; padding: 80px 20px; color: var(--text-3); }
+  .coming i { font-size: 48px; margin-bottom: 16px; display: block; opacity: .35; }
+  .coming h3 { font-size: 16px; color: var(--text-2); margin-bottom: 8px; }
+  .coming p  { font-size: 13px; }
+
+  /* ── SCROLLABLE LISTS ── */
+  .scroll-list { max-height: 260px; overflow-y: auto; padding-right: 4px; }
+  .scroll-list::-webkit-scrollbar { width: 4px; }
+  .scroll-list::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 4px; }
+
+  /* responsive */
+  @media(max-width:900px){
+    .grid-4{grid-template-columns:repeat(2,1fr);}
+    .grid-3{grid-template-columns:repeat(2,1fr);}
+    .grid-2,.grid-2-3{grid-template-columns:1fr;}
+    .form-grid{grid-template-columns:1fr;}
+    .nav-btn span{display:none;}
+    .nav-btn i{font-size:18px;}
+    .nav-btn{padding:8px 10px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOPBAR ═══════════ -->
+<nav class="topbar">
+  <div class="logo">My<span>Dash</span></div>
+  <div class="nav-items">
+    <button class="nav-btn active" data-sec="home"    onclick="show('home',this)">    <i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+    <button class="nav-btn" data-sec="social"   onclick="show('social',this)">   <i class="ti ti-brand-instagram"></i><span>Social</span></button>
+    <button class="nav-btn" data-sec="envato"   onclick="show('envato',this)">   <i class="ti ti-shopping-bag"></i><span>Envato</span></button>
+    <button class="nav-btn" data-sec="shopify"  onclick="show('shopify',this)">  <i class="ti ti-brand-shopify"></i><span>Shopify</span></button>
+    <button class="nav-btn" data-sec="research" onclick="show('research',this)"> <i class="ti ti-world-search"></i><span>Rankings</span></button>
+    <button class="nav-btn" data-sec="channel"  onclick="show('channel',this)">  <i class="ti ti-brand-youtube"></i><span>Channel</span></button>
+    <button class="nav-btn" data-sec="invest"   onclick="show('invest',this)">   <i class="ti ti-chart-pie"></i><span>Investment</span></button>
+    <button class="nav-btn" data-sec="leads"    onclick="show('leads',this)">    <i class="ti ti-users"></i><span>Leads</span></button>
+    <button class="nav-btn" data-sec="memory"   onclick="show('memory',this)">   <i class="ti ti-vault"></i><span>Memory Vault</span></button>
+    <button class="nav-btn" data-sec="team"     onclick="show('team',this)">     <i class="ti ti-building-community"></i><span>Team</span></button>
+  </div>
+  <div class="topbar-right">
+    <div class="time-badge" id="livetime"></div>
+    <div class="user-badge">R</div>
+    <button class="logout-btn"><i class="ti ti-logout" style="font-size:14px"></i> Logout</button>
+  </div>
+</nav>
+
+<div class="content-wrap">
+
+  <!-- ═══════════ HOME ═══════════ -->
+  <div class="section active" id="sec-home">
+    <div class="page-header">
+      <h2><span style="background:#3b82f6"></span>Home</h2>
+      <div class="time-badge" id="homedate"></div>
+    </div>
+
+    <div class="grid-4 mb20">
+      <div class="mcard" style="--accent:#3b82f6"><i class="ti ti-trending-up micon"></i><div class="mlabel">Today Income</div><div class="mval" id="m-income">৳0</div><div class="msub">Current day</div></div>
+      <div class="mcard" style="--accent:#ef4444"><i class="ti ti-trending-down micon"></i><div class="mlabel">Today Expense</div><div class="mval" id="m-expense">৳0</div><div class="msub">Current day</div></div>
+      <div class="mcard" style="--accent:#10b981"><i class="ti ti-checkbox micon"></i><div class="mlabel">Active Tasks</div><div class="mval" id="m-tasks">0</div><div class="msub">Remaining</div></div>
+      <div class="mcard" style="--accent:#8b5cf6"><i class="ti ti-notebook micon"></i><div class="mlabel">Notes Saved</div><div class="mval" id="m-notes">0</div><div class="msub">All notes</div></div>
+    </div>
+
+    <div class="grid-2-3 mb16">
+      <!-- Calendar -->
+      <div class="card">
+        <div class="card-head" style="color:#3b82f6"><i class="ti ti-calendar"></i> Calendar</div>
+        <div class="cal-nav">
+          <button class="btn btn-sm btn-icon" onclick="chMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+          <span class="cal-month" id="cal-lbl"></span>
+          <button class="btn btn-sm btn-icon" onclick="chMonth(1)"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+
+      <!-- To-do -->
+      <div class="card">
+        <div class="card-head" style="color:#10b981"><i class="ti ti-checkbox"></i> To-Do List</div>
+        <div class="scroll-list" id="todo-list"></div>
+        <div class="row" style="margin-top:12px">
+          <input type="text" id="todo-in" placeholder="Add a task and press Enter…" onkeydown="if(event.key==='Enter')addTodo()">
+          <button class="btn btn-blue btn-icon" onclick="addTodo()"><i class="ti ti-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3 mb16">
+      <!-- Book Notes -->
+      <div class="card">
+        <div class="card-head" style="color:#8b5cf6"><i class="ti ti-notebook"></i> Book Notes</div>
+        <div class="scroll-list" id="note-list"></div>
+        <div class="row" style="margin-top:10px">
+          <input type="text" id="note-in" placeholder="Add note…" onkeydown="if(event.key==='Enter')addNote()">
+          <button class="btn btn-purple btn-icon" onclick="addNote()"><i class="ti ti-plus"></i></button>
+        </div>
+      </div>
+
+      <!-- Weird Knowledge -->
+      <div class="card">
+        <div class="card-head" style="color:#f59e0b"><i class="ti ti-brain"></i> Weird Knowledge</div>
+        <div class="scroll-list" id="wk-list"></div>
+        <div class="row" style="margin-top:10px">
+          <input type="text" id="wk-in" placeholder="Interesting fact…" onkeydown="if(event.key==='Enter')addWK()">
+          <button class="btn btn-amber btn-icon" onclick="addWK()"><i class="ti ti-plus"></i></button>
+        </div>
+      </div>
+
+      <!-- Expenses -->
+      <div class="card">
+        <div class="card-head" style="color:#ec4899"><i class="ti ti-cash"></i> Today Expenses & Income</div>
+        <div class="form-grid cols3" style="margin-bottom:8px">
+          <div class="fgroup"><input type="text" id="exp-desc" placeholder="Description"></div>
+          <div class="fgroup"><input type="number" id="exp-amt" placeholder="Amount ৳"></div>
+          <div class="row" style="gap:6px"><select id="exp-type" style="flex:1"><option value="income">Income</option><option value="expense">Expense</option></select><button class="btn btn-pink btn-icon" onclick="addExpense()"><i class="ti ti-plus"></i></button></div>
+        </div>
+        <div class="scroll-list" id="exp-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SOCIAL ═══════════ -->
+  <div class="section" id="sec-social">
+    <div class="page-header">
+      <h2><span style="background:#ec4899"></span>Social Details</h2>
+      <button class="btn btn-pink" onclick="toggleForm('social-form')"><i class="ti ti-plus"></i> Add Post</button>
+    </div>
+    <div class="form-panel" id="social-form">
+      <div class="form-grid cols3">
+        <div class="fgroup"><div class="flabel">Platform</div><select id="sp-plat"><option value="facebook">Facebook</option><option value="instagram">Instagram</option><option value="twitter">Twitter/X</option><option value="youtube">YouTube</option><option value="linkedin">LinkedIn</option></select></div>
+        <div class="fgroup"><div class="flabel">Scheduled Date</div><input type="date" id="sp-date"></div>
+        <div class="fgroup"><div class="flabel">Status</div><select id="sp-status"><option value="pending">Pending</option><option value="approved">Published</option></select></div>
+      </div>
+      <div class="fgroup" style="margin-bottom:12px"><div class="flabel">Post Content</div><textarea id="sp-content" rows="3" placeholder="Write your post content here…"></textarea></div>
+      <div class="row"><button class="btn btn-pink" onclick="savePost()"><i class="ti ti-device-floppy"></i> Save Post</button><button class="btn" onclick="toggleForm('social-form')">Cancel</button></div>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="filterPosts('all',this)">All</div>
+      <div class="tab" onclick="filterPosts('facebook',this)">Facebook</div>
+      <div class="tab" onclick="filterPosts('instagram',this)">Instagram</div>
+      <div class="tab" onclick="filterPosts('twitter',this)">Twitter/X</div>
+      <div class="tab" onclick="filterPosts('youtube',this)">YouTube</div>
+      <div class="tab" onclick="filterPosts('linkedin',this)">LinkedIn</div>
+    </div>
+    <div id="post-list"></div>
+  </div>
+
+  <!-- ═══════════ ENVATO ═══════════ -->
+  <div class="section" id="sec-envato">
+    <div class="page-header">
+      <h2><span style="background:#10b981"></span>Envato Sales</h2>
+      <button class="btn btn-green" onclick="toggleForm('env-form')"><i class="ti ti-plus"></i> Add Sale</button>
+    </div>
+    <div class="grid-4 mb16">
+      <div class="mcard" style="--accent:#10b981"><i class="ti ti-coin micon"></i><div class="mlabel">Total Revenue</div><div class="mval" id="env-total">$0</div></div>
+      <div class="mcard" style="--accent:#3b82f6"><i class="ti ti-calendar micon"></i><div class="mlabel">This Month</div><div class="mval" id="env-month">$0</div></div>
+      <div class="mcard" style="--accent:#8b5cf6"><i class="ti ti-package micon"></i><div class="mlabel">Items Sold</div><div class="mval" id="env-count">0</div></div>
+      <div class="mcard" style="--accent:#f59e0b"><i class="ti ti-chart-bar micon"></i><div class="mlabel">Avg. Sale</div><div class="mval" id="env-avg">$0</div></div>
+    </div>
+    <div class="form-panel" id="env-form">
+      <div class="form-grid cols3">
+        <div class="fgroup"><div class="flabel">Item Name</div><input type="text" id="env-item" placeholder="e.g. HTML Template"></div>
+        <div class="fgroup"><div class="flabel">Amount ($)</div><input type="number" id="env-amt" placeholder="0.00"></div>
+        <div class="fgroup"><div class="flabel">Category</div><select id="env-cat"><option>HTML/CSS</option><option>WordPress</option><option>Graphics</option><option>Script</option><option>Other</option></select></div>
+        <div class="fgroup"><div class="flabel">Date</div><input type="date" id="env-date"></div>
+        <div class="fgroup"><div class="flabel">Buyer</div><input type="text" id="env-buyer" placeholder="Buyer username (optional)"></div>
+      </div>
+      <div class="row"><button class="btn btn-green" onclick="saveEnvato()"><i class="ti ti-device-floppy"></i> Save</button><button class="btn" onclick="toggleForm('env-form')">Cancel</button></div>
+    </div>
+    <div class="card"><div class="card-head" style="color:#10b981"><i class="ti ti-list"></i> Sales History</div><div id="env-list"></div></div>
+  </div>
+
+  <!-- ═══════════ SHOPIFY ═══════════ -->
+  <div class="section" id="sec-shopify">
+    <div class="page-header">
+      <h2><span style="background:#8b5cf6"></span>Shopify Sales</h2>
+      <button class="btn btn-purple" onclick="toggleForm('sh-form')"><i class="ti ti-plus"></i> Add Order</button>
+    </div>
+    <div class="grid-4 mb16">
+      <div class="mcard" style="--accent:#8b5cf6"><i class="ti ti-coin micon"></i><div class="mlabel">Total Revenue</div><div class="mval" id="sh-total">$0</div></div>
+      <div class="mcard" style="--accent:#3b82f6"><i class="ti ti-calendar micon"></i><div class="mlabel">This Month</div><div class="mval" id="sh-month">$0</div></div>
+      <div class="mcard" style="--accent:#10b981"><i class="ti ti-shopping-cart micon"></i><div class="mlabel">Orders</div><div class="mval" id="sh-count">0</div></div>
+      <div class="mcard" style="--accent:#f59e0b"><i class="ti ti-chart-bar micon"></i><div class="mlabel">Avg. Order</div><div class="mval" id="sh-avg">$0</div></div>
+    </div>
+    <div class="form-panel" id="sh-form">
+      <div class="form-grid cols3">
+        <div class="fgroup"><div class="flabel">Product</div><input type="text" id="sh-item" placeholder="Product name"></div>
+        <div class="fgroup"><div class="flabel">Revenue ($)</div><input type="number" id="sh-amt" placeholder="0.00"></div>
+        <div class="fgroup"><div class="flabel">Status</div><select id="sh-status"><option>Completed</option><option>Pending</option><option>Refunded</option></select></div>
+        <div class="fgroup"><div class="flabel">Date</div><input type="date" id="sh-date"></div>
+        <div class="fgroup"><div class="flabel">Customer</div><input type="text" id="sh-customer" placeholder="Customer name (optional)"></div>
+      </div>
+      <div class="row"><button class="btn btn-purple" onclick="saveShopify()"><i class="ti ti-device-floppy"></i> Save</button><button class="btn" onclick="toggleForm('sh-form')">Cancel</button></div>
+    </div>
+    <div class="card"><div class="card-head" style="color:#8b5cf6"><i class="ti ti-list"></i> Order History</div><div id="sh-list"></div></div>
+  </div>
+
+  <!-- ═══════════ RESEARCH / RANKINGS ═══════════ -->
+  <div class="section" id="sec-research">
+    <div class="page-header">
+      <h2><span style="background:#f59e0b"></span>Website Rankings</h2>
+      <button class="btn btn-amber" onclick="toggleForm('site-form')"><i class="ti ti-plus"></i> Add Website</button>
+    </div>
+    <div class="grid-4 mb16">
+      <div class="mcard" style="--accent:#f59e0b"><i class="ti ti-world micon"></i><div class="mlabel">Websites</div><div class="mval" id="site-count">0</div></div>
+      <div class="mcard" style="--accent:#10b981"><i class="ti ti-trending-up micon"></i><div class="mlabel">Ranking Up</div><div class="mval" id="site-up">0</div></div>
+      <div class="mcard" style="--accent:#ef4444"><i class="ti ti-trending-down micon"></i><div class="mlabel">Ranking Down</div><div class="mval" id="site-dn">0</div></div>
+      <div class="mcard" style="--accent:#8b5cf6"><i class="ti ti-key micon"></i><div class="mlabel">Keywords</div><div class="mval" id="site-kw">0</div></div>
+    </div>
+    <div class="form-panel" id="site-form">
+      <div class="form-grid cols3">
+        <div class="fgroup"><div class="flabel">Website URL</div><input type="text" id="s-url" placeholder="example.com"></div>
+        <div class="fgroup"><div class="flabel">Target Keyword</div><input type="text" id="s-kw" placeholder="main keyword"></div>
+        <div class="fgroup"><div class="flabel">Current Rank</div><input type="number" id="s-rank" placeholder="e.g. 5"></div>
+        <div class="fgroup"><div class="flabel">Previous Rank</div><input type="number" id="s-prev" placeholder="e.g. 8"></div>
+        <div class="fgroup"><div class="flabel">Search Volume</div><input type="number" id="s-vol" placeholder="monthly searches"></div>
+      </div>
+      <div class="row"><button class="btn btn-amber" onclick="saveSite()"><i class="ti ti-device-floppy"></i> Save</button><button class="btn" onclick="toggleForm('site-form')">Cancel</button></div>
+    </div>
+    <div class="card"><div class="card-head" style="color:#f59e0b"><i class="ti ti-world-search"></i> Google Search Positions</div><div id="site-list"></div></div>
+  </div>
+
+  <!-- ═══════════ CHANNEL ═══════════ -->
+  <div class="section" id="sec-channel">
+    <div class="page-header">
+      <h2><span style="background:#ef4444"></span>My YouTube Channel</h2>
+      <button class="btn btn-red"><i class="ti ti-api"></i> Connect YouTube API</button>
+    </div>
+    <div class="grid-4 mb16">
+      <div class="mcard" style="--accent:#ef4444"><i class="ti ti-users micon"></i><div class="mlabel">Subscribers</div><div class="mval" id="yt-subs">—</div><div class="msub">Connect API</div></div>
+      <div class="mcard" style="--accent:#f59e0b"><i class="ti ti-eye micon"></i><div class="mlabel">Total Views</div><div class="mval" id="yt-views">—</div></div>
+      <div class="mcard" style="--accent:#10b981"><i class="ti ti-video micon"></i><div class="mlabel">Videos</div><div class="mval" id="yt-vids">—</div></div>
+      <div class="mcard" style="--accent:#8b5cf6"><i class="ti ti-clock micon"></i><div class="mlabel">Watch Time (hrs)</div><div class="mval" id="yt-wt">—</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head" style="color:#8b5cf6"><i class="ti ti-bulb"></i> Content Ideas</div>
+        <div class="scroll-list" id="idea-list"></div>
+        <div class="row" style="margin-top:10px">
+          <input type="text" id="idea-in" placeholder="New content idea…" onkeydown="if(event.key==='Enter')addIdea()">
+          <button class="btn btn-purple btn-icon" onclick="addIdea()"><i class="ti ti-plus"></i></button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head" style="color:#ef4444"><i class="ti ti-list-check"></i> Channel To-Do</div>
+        <div class="scroll-list" id="yt-todo-list"></div>
+        <div class="row" style="margin-top:10px">
+          <input type="text" id="yt-todo-in" placeholder="Add channel task…" onkeydown="if(event.key==='Enter')addYtTodo()">
+          <button class="btn btn-red btn-icon" onclick="addYtTodo()"><i class="ti ti-plus"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ COMING SOON SECTIONS ═══════════ -->
+  <div class="section" id="sec-invest">
+    <div class="page-header"><h2><span style="background:#06b6d4"></span>Investment</h2></div>
+    <div class="coming"><i class="ti ti-chart-pie"></i><h3>Investment Tracker</h3><p>Share your financial details and I'll build this section out fully.</p></div>
+  </div>
+  <div class="section" id="sec-leads">
+    <div class="page-header"><h2><span style="background:#84cc16"></span>Client Leads</h2></div>
+    <div class="coming"><i class="ti ti-users"></i><h3>Client Leads CRM</h3><p>Share your lead tracking needs and I'll build this section out.</p></div>
+  </div>
+  <div class="section" id="sec-memory">
+    <div class="page-header"><h2><span style="background:#a855f7"></span>Memory Vault</h2></div>
+    <div class="coming"><i class="ti ti-vault"></i><h3>Memory Vault</h3><p>Share your requirements and I'll build this section out.</p></div>
+  </div>
+  <div class="section" id="sec-team">
+    <div class="page-header"><h2><span style="background:#f97316"></span>Team</h2></div>
+    <div class="coming"><i class="ti ti-building-community"></i><h3>Team Management</h3><p>Share your team structure and I'll build this section out.</p></div>
+  </div>
+
+</div><!-- /content-wrap -->
+
+<script>
+// ── STORAGE HELPERS ──
+const S = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k))||[]; }catch(e){ return []; } },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)); },
+};
+
+// ── NAVIGATION ──
+function show(id, el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+function toggleForm(id){
+  const f = document.getElementById(id);
+  f.classList.toggle('open');
+}
+
+// ── TIME ──
+function tick(){
+  const n=new Date();
+  const t=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('livetime').textContent=t;
+}
+setInterval(tick,1000); tick();
+document.getElementById('homedate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+// ── CALENDAR ──
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['Su','Mo','Tu','We','Th','Fr','Sa'];
+let CY=new Date().getFullYear(), CM=new Date().getMonth();
+function renderCal(){
+  document.getElementById('cal-lbl').textContent=MONTHS[CM]+' '+CY;
+  const g=document.getElementById('cal-grid');
+  g.innerHTML=DAYS.map(d=>`<div class="cal-hd">${d}</div>`).join('');
+  const first=new Date(CY,CM,1).getDay();
+  const total=new Date(CY,CM+1,0).getDate();
+  const prev=new Date(CY,CM,0).getDate();
+  const today=new Date();
+  for(let i=0;i<first;i++) g.innerHTML+=`<div class="cal-d other">${prev-first+1+i}</div>`;
+  for(let d=1;d<=total;d++){
+    const isT=d===today.getDate()&&CM===today.getMonth()&&CY===today.getFullYear();
+    g.innerHTML+=`<div class="cal-d${isT?' today':''}">${d}</div>`;
+  }
+  const rem=(7-((first+total)%7))%7;
+  for(let d=1;d<=rem;d++) g.innerHTML+=`<div class="cal-d other">${d}</div>`;
+}
+function chMonth(d){ CM+=d; if(CM>11){CM=0;CY++;}if(CM<0){CM=11;CY--;} renderCal(); }
+renderCal();
+
+// ── TODO ──
+let todos=S.get('t_todos');
+function renderTodos(){
+  const el=document.getElementById('todo-list');
+  if(!todos.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--text-3);font-size:13px">No tasks yet. Add one below.</div>';document.getElementById('m-tasks').textContent=0;return;}
+  el.innerHTML=todos.map((t,i)=>`<div class="todo-item"><div class="todo-cb${t.done?' done':''}" onclick="togTodo(${i})"></div><span class="todo-text${t.done?' done':''}">${t.t}</span><span class="del-btn" onclick="delTodo(${i})"><i class="ti ti-trash"></i></span></div>`).join('');
+  document.getElementById('m-tasks').textContent=todos.filter(t=>!t.done).length;
+}
+function addTodo(){ const i=document.getElementById('todo-in'); if(!i.value.trim())return; todos.push({t:i.value.trim(),done:false}); S.set('t_todos',todos); i.value=''; renderTodos(); }
+function togTodo(i){ todos[i].done=!todos[i].done; S.set('t_todos',todos); renderTodos(); }
+function delTodo(i){ todos.splice(i,1); S.set('t_todos',todos); renderTodos(); }
+renderTodos();
+
+// ── NOTES ──
+let notes=S.get('t_notes');
+function renderNotes(){
+  const el=document.getElementById('note-list');
+  el.innerHTML=notes.map((n,i)=>`<div class="note-item"><span class="note-del" onclick="delNote(${i})"><i class="ti ti-x"></i></span>${n.t}<div class="note-date">${n.d}</div></div>`).join('');
+  document.getElementById('m-notes').textContent=notes.length;
+}
+function addNote(){ const i=document.getElementById('note-in'); if(!i.value.trim())return; notes.unshift({t:i.value.trim(),d:new Date().toLocaleDateString('en-GB')}); S.set('t_notes',notes); i.value=''; renderNotes(); }
+function delNote(i){ notes.splice(i,1); S.set('t_notes',notes); renderNotes(); }
+renderNotes();
+
+// ── WEIRD KNOWLEDGE ──
+let wks=S.get('t_wk');
+function renderWK(){
+  const el=document.getElementById('wk-list');
+  el.innerHTML=wks.map((n,i)=>`<div class="note-item" style="background:#fffbeb"><span class="note-del" onclick="delWK(${i})"><i class="ti ti-x"></i></span>${n.t}<div class="note-date">${n.d}</div></div>`).join('');
+}
+function addWK(){ const i=document.getElementById('wk-in'); if(!i.value.trim())return; wks.unshift({t:i.value.trim(),d:new Date().toLocaleDateString('en-GB')}); S.set('t_wk',wks); i.value=''; renderWK(); }
+function delWK(i){ wks.splice(i,1); S.set('t_wk',wks); renderWK(); }
+renderWK();
+
+// ── EXPENSES ──
+let exps=S.get('t_exps');
+function renderExps(){
+  const today=new Date().toDateString();
+  const todayExps=exps.filter(e=>new Date(e.dt).toDateString()===today);
+  const inc=todayExps.filter(e=>e.type==='income').reduce((s,e)=>s+e.amt,0);
+  const exp=todayExps.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amt,0);
+  document.getElementById('m-income').textContent='৳'+inc.toLocaleString();
+  document.getElementById('m-expense').textContent='৳'+exp.toLocaleString();
+  const el=document.getElementById('exp-list');
+  el.innerHTML=exps.slice().reverse().slice(0,15).map((e,i)=>`<div class="exp-row"><span style="flex:2">${e.desc}</span><span class="tag tag-${e.type==='income'?'inc':'exp'}">${e.type}</span><span class="mono">৳${e.amt.toLocaleString()}</span><span style="font-size:11px;color:var(--text-3);min-width:80px;text-align:right">${new Date(e.dt).toLocaleDateString('en-GB')}</span><span class="del-btn" onclick="delExp(${exps.length-1-i})"><i class="ti ti-trash"></i></span></div>`).join('');
+}
+function addExpense(){ const d=document.getElementById('exp-desc').value.trim(); const a=parseFloat(document.getElementById('exp-amt').value); const t=document.getElementById('exp-type').value; if(!d||isNaN(a))return; exps.push({desc:d,amt:a,type:t,dt:new Date().toISOString()}); S.set('t_exps',exps); document.getElementById('exp-desc').value=''; document.getElementById('exp-amt').value=''; renderExps(); }
+function delExp(i){ exps.splice(i,1); S.set('t_exps',exps); renderExps(); }
+renderExps();
+
+// ── SOCIAL POSTS ──
+let posts=S.get('t_posts');
+let postFilter='all';
+const platCls={facebook:'plat-fb',instagram:'plat-ig',twitter:'plat-tw',youtube:'plat-yt',linkedin:'plat-li'};
+function renderPosts(){
+  const fp=postFilter==='all'?posts:posts.filter(p=>p.platform===postFilter);
+  const el=document.getElementById('post-list');
+  if(!fp.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-3);font-size:13px">No posts yet. Click "+ Add Post" to start.</div>';return;}
+  el.innerHTML=fp.map((p,i)=>`<div class="post-card"><div class="post-top"><span class="plat-tag ${platCls[p.platform]||'plat-fb'}">${p.platform}</span><span class="post-date">${p.date||''}</span><div class="post-actions"><button class="status-toggle st-${p.status}" onclick="togPost(${posts.indexOf(p)})">${p.status==='approved'?'✓ Published':'⏳ Pending'}</button><button class="btn btn-sm" onclick="delPost(${posts.indexOf(p)})" style="color:#ef4444;border-color:#fecaca"><i class="ti ti-trash"></i></button></div></div><div class="post-body">${p.content}</div></div>`).join('');
+}
+function filterPosts(f,el){ postFilter=f; document.querySelectorAll('#sec-social .tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); renderPosts(); }
+function savePost(){ const pl=document.getElementById('sp-plat').value; const c=document.getElementById('sp-content').value.trim(); const d=document.getElementById('sp-date').value; const st=document.getElementById('sp-status').value; if(!c)return; posts.unshift({platform:pl,content:c,date:d,status:st}); S.set('t_posts',posts); document.getElementById('sp-content').value=''; toggleForm('social-form'); renderPosts(); }
+function togPost(i){ posts[i].status=posts[i].status==='approved'?'pending':'approved'; S.set('t_posts',posts); renderPosts(); }
+function delPost(i){ posts.splice(i,1); S.set('t_posts',posts); renderPosts(); }
+renderPosts();
+
+// ── ENVATO ──
+let envSales=S.get('t_env');
+function renderEnvato(){
+  const total=envSales.reduce((s,e)=>s+e.amt,0);
+  const now=new Date();
+  const month=envSales.filter(e=>{const d=new Date(e.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();}).reduce((s,e)=>s+e.amt,0);
+  document.getElementById('env-total').textContent='$'+total.toFixed(2);
+  document.getElementById('env-month').textContent='$'+month.toFixed(2);
+  document.getElementById('env-count').textContent=envSales.length;
+  document.getElementById('env-avg').textContent=envSales.length?'$'+(total/envSales.length).toFixed(2):'$0';
+  const el=document.getElementById('env-list');
+  if(!envSales.length){el.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px">No sales recorded yet.</div>';return;}
+  el.innerHTML=envSales.slice().reverse().map((e,i)=>`<div class="exp-row"><span style="flex:2;font-weight:500">${e.item}</span><span class="tag" style="background:#d1fae5;color:#065f46">${e.cat}</span>${e.buyer?`<span style="font-size:12px;color:var(--text-3)">${e.buyer}</span>`:''}<span style="font-size:12px;color:var(--text-3)">${e.date}</span><span class="mono" style="color:#10b981">$${e.amt.toFixed(2)}</span><span class="del-btn" onclick="delEnvato(${envSales.length-1-i})"><i class="ti ti-trash"></i></span></div>`).join('');
+}
+function saveEnvato(){ const item=document.getElementById('env-item').value.trim(); const amt=parseFloat(document.getElementById('env-amt').value); const cat=document.getElementById('env-cat').value; const date=document.getElementById('env-date').value; const buyer=document.getElementById('env-buyer').value.trim(); if(!item||isNaN(amt))return; envSales.push({item,amt,cat,date,buyer}); S.set('t_env',envSales); document.getElementById('env-item').value=''; document.getElementById('env-amt').value=''; toggleForm('env-form'); renderEnvato(); }
+function delEnvato(i){ envSales.splice(i,1); S.set('t_env',envSales); renderEnvato(); }
+renderEnvato();
+
+// ── SHOPIFY ──
+let shSales=S.get('t_sh');
+function renderShopify(){
+  const total=shSales.reduce((s,e)=>s+e.amt,0);
+  const now=new Date();
+  const month=shSales.filter(e=>{const d=new Date(e.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();}).reduce((s,e)=>s+e.amt,0);
+  document.getElementById('sh-total').textContent='$'+total.toFixed(2);
+  document.getElementById('sh-month').textContent='$'+month.toFixed(2);
+  document.getElementById('sh-count').textContent=shSales.length;
+  document.getElementById('sh-avg').textContent=shSales.length?'$'+(total/shSales.length).toFixed(2):'$0';
+  const el=document.getElementById('sh-list');
+  if(!shSales.length){el.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px">No orders recorded yet.</div>';return;}
+  el.innerHTML=shSales.slice().reverse().map((e,i)=>`<div class="exp-row"><span style="flex:2;font-weight:500">${e.item}</span><span class="tag tag-${e.status==='Completed'?'done':e.status==='Refunded'?'ref':'pend'}">${e.status}</span>${e.customer?`<span style="font-size:12px;color:var(--text-3)">${e.customer}</span>`:''}<span style="font-size:12px;color:var(--text-3)">${e.date}</span><span class="mono" style="color:#8b5cf6">$${e.amt.toFixed(2)}</span><span class="del-btn" onclick="delShopify(${shSales.length-1-i})"><i class="ti ti-trash"></i></span></div>`).join('');
+}
+function saveShopify(){ const item=document.getElementById('sh-item').value.trim(); const amt=parseFloat(document.getElementById('sh-amt').value); const status=document.getElementById('sh-status').value; const date=document.getElementById('sh-date').value; const customer=document.getElementById('sh-customer').value.trim(); if(!item||isNaN(amt))return; shSales.push({item,amt,status,date,customer}); S.set('t_sh',shSales); document.getElementById('sh-item').value=''; document.getElementById('sh-amt').value=''; toggleForm('sh-form'); renderShopify(); }
+function delShopify(i){ shSales.splice(i,1); S.set('t_sh',shSales); renderShopify(); }
+renderShopify();
+
+// ── WEBSITE RANKINGS ──
+let sites=S.get('t_sites');
+function renderSites(){
+  const up=sites.filter(s=>s.rank<s.prev).length;
+  const dn=sites.filter(s=>s.rank>s.prev).length;
+  document.getElementById('site-count').textContent=sites.length;
+  document.getElementById('site-up').textContent=up;
+  document.getElementById('site-dn').textContent=dn;
+  document.getElementById('site-kw').textContent=sites.length;
+  const el=document.getElementById('site-list');
+  if(!sites.length){el.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-3);font-size:13px">No websites tracked yet. Add one above.</div>';return;}
+  el.innerHTML=sites.map((s,i)=>{
+    const diff=s.prev-s.rank;
+    const cls=diff>0?'rank-up':diff<0?'rank-dn':'rank-same';
+    const arrow=diff>0?`<span class="arrow-up">↑${diff}</span>`:diff<0?`<span class="arrow-dn">↓${Math.abs(diff)}</span>`:`<span style="color:var(--text-3)">—</span>`;
+    const pct=Math.max(5,Math.min(100,100-s.rank*2));
+    const vol=s.vol?`<span style="font-size:11px;color:var(--text-3)">${parseInt(s.vol).toLocaleString()} vol</span>`:'';
+    return `<div class="site-row"><span class="rank-badge ${cls}">#${s.rank}</span><div style="flex:2"><div style="font-weight:500">${s.url}</div><div style="font-size:11px;color:var(--text-3);margin-top:2px">${s.kw}</div></div>${vol}<div class="kw-wrap"><div class="kw-fill" style="width:${pct}%"></div></div>${arrow}<span class="del-btn" onclick="delSite(${i})"><i class="ti ti-trash"></i></span></div>`;
+  }).join('');
+}
+function saveSite(){ const url=document.getElementById('s-url').value.trim(); const kw=document.getElementById('s-kw').value.trim(); const rank=parseInt(document.getElementById('s-rank').value); const prev=parseInt(document.getElementById('s-prev').value)||rank; const vol=document.getElementById('s-vol').value; if(!url||isNaN(rank))return; sites.push({url,kw,rank,prev,vol}); S.set('t_sites',sites); ['s-url','s-kw','s-rank','s-prev','s-vol'].forEach(id=>document.getElementById(id).value=''); toggleForm('site-form'); renderSites(); }
+function delSite(i){ sites.splice(i,1); S.set('t_sites',sites); renderSites(); }
+renderSites();
+
+// ── CHANNEL IDEAS ──
+let ideas=S.get('t_ideas');
+function renderIdeas(){
+  const el=document.getElementById('idea-list');
+  if(!ideas.length){el.innerHTML='<div style="padding:16px;text-align:center;color:var(--text-3);font-size:13px">No ideas yet.</div>';return;}
+  el.innerHTML=ideas.map((d,i)=>`<div class="idea-item"><div class="idea-dot"></div><span style="flex:1">${d.t}</span><span class="del-btn" onclick="delIdea(${i})"><i class="ti ti-x" style="font-size:13px"></i></span></div>`).join('');
+}
+function addIdea(){ const i=document.getElementById('idea-in'); if(!i.value.trim())return; ideas.unshift({t:i.value.trim()}); S.set('t_ideas',ideas); i.value=''; renderIdeas(); }
+function delIdea(i){ ideas.splice(i,1); S.set('t_ideas',ideas); renderIdeas(); }
+renderIdeas();
+
+// ── CHANNEL TODOS ──
+let ytTodos=S.get('t_yttodo');
+function renderYtTodo(){
+  const el=document.getElementById('yt-todo-list');
+  if(!ytTodos.length){el.innerHTML='<div style="padding:16px;text-align:center;color:var(--text-3);font-size:13px">No tasks yet.</div>';return;}
+  el.innerHTML=ytTodos.map((t,i)=>`<div class="todo-item"><div class="todo-cb${t.done?' done':''}" onclick="togYtTodo(${i})"></div><span class="todo-text${t.done?' done':''}">${t.t}</span><span class="del-btn" onclick="delYtTodo(${i})"><i class="ti ti-trash"></i></span></div>`).join('');
+}
+function addYtTodo(){ const i=document.getElementById('yt-todo-in'); if(!i.value.trim())return; ytTodos.push({t:i.value.trim(),done:false}); S.set('t_yttodo',ytTodos); i.value=''; renderYtTodo(); }
+function togYtTodo(i){ ytTodos[i].done=!ytTodos[i].done; S.set('t_yttodo',ytTodos); renderYtTodo(); }
+function delYtTodo(i){ ytTodos.splice(i,1); S.set('t_yttodo',ytTodos); renderYtTodo(); }
+renderYtTodo();
+</script>
+</body>
+</html>
