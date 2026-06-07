@@ -1,0 +1,12 @@
+{
+  "name": "YouTube AI Automation",
+  "steps": [
+    "Cron 9AM",
+    "Trending Search",
+    "Claude Script",
+    "ElevenLabs Voice",
+    "Video Creation",
+    "YouTube Upload",
+    "Webhook Return"
+  ]
+}
